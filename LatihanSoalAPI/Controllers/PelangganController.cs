@@ -31,8 +31,30 @@ namespace LatihanSoalAPI.Controllers
         }
 
         [HttpPost]
+        [Route("Save")]
+        public async Task<ProcessResultT<MsPelanggan>> Save([FromBody] MsPelanggan Model)
+        {
+            var processResult = new ProcessResultT<MsPelanggan>();
+
+            try
+            {
+                _myDbContext.MsPelanggan.Add(Model);
+                await _myDbContext.SaveChangesAsync();
+                processResult.InsertSucceed();
+            }
+            catch (Exception e)
+            {
+                processResult.SetException(e);
+            }
+
+            return processResult;
+        }
+
+        [HttpPost]
         public async Task<IActionResult> PostAsync(MsPelanggan pelanggan)
         {
+            var processResult = new ProcessResultT<MsPelanggan>();
+
             _myDbContext.MsPelanggan.Add(pelanggan);
             await _myDbContext.SaveChangesAsync();
             return Created($"/get-pelanggan-by-id?id={pelanggan.Id}", pelanggan);
