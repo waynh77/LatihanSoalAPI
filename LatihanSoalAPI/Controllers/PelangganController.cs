@@ -38,7 +38,15 @@ namespace LatihanSoalAPI.Controllers
 
             try
             {
-                _myDbContext.MsPelanggan.Add(Model);
+                if (Model.Id == 0)
+                {
+                    _myDbContext.MsPelanggan.Add(Model);
+
+                }
+                else
+                {
+                    _myDbContext.MsPelanggan.Update(Model);
+                }
                 await _myDbContext.SaveChangesAsync();
                 processResult.InsertSucceed();
             }
