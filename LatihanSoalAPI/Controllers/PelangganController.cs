@@ -99,6 +99,11 @@ namespace LatihanSoalAPI.Controllers
             try
             {
                 var pelangganToDelete = await _myDbContext.MsPelanggan.FindAsync(Model.Id);
+                if (pelangganToDelete == null)
+                {
+                    processResult.DeleteFailed();
+                    return processResult;
+                }
                 _myDbContext.MsPelanggan.Remove(pelangganToDelete);
                 await _myDbContext.SaveChangesAsync();
                 processResult.DeleteSucceed();

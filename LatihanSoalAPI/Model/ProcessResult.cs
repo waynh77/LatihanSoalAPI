@@ -32,6 +32,11 @@ namespace LatihanSoalAPI.Model
             this.isSucceed = true;
             this.message = "Data has been Deleted.";
         }
+        public void DeleteFailed()
+        {
+            this.isSucceed = true;
+            this.message = "Data gagal hapus.";
+        }
         public void SetException(Exception e)
         {
             this.isSucceed = false;

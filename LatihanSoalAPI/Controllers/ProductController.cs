@@ -31,6 +31,34 @@ namespace LatihanSoalAPI.Controllers
         }
 
         [HttpPost]
+        [Route("Save")]
+        public async Task<ProcessResultT<MsProduct>> Save([FromBody] MsProduct Model)
+        {
+            var processResult = new ProcessResultT<MsProduct>();
+
+            try
+            {
+                if (Model.Id == 0)
+                {
+                    _myDbContext.MsProduct.Add(Model);
+
+                }
+                else
+                {
+                    _myDbContext.MsProduct.Update(Model);
+                }
+                await _myDbContext.SaveChangesAsync();
+                processResult.InsertSucceed();
+            }
+            catch (Exception e)
+            {
+                processResult.SetException(e);
+            }
+
+            return processResult;
+        }
+
+        [HttpPost]
         public async Task<IActionResult> PostAsync(MsProduct pelanggan)
         {
             _myDbContext.MsProduct.Add(pelanggan);
@@ -58,6 +86,33 @@ namespace LatihanSoalAPI.Controllers
             _myDbContext.MsProduct.Remove(pelangganToDelete);
             await _myDbContext.SaveChangesAsync();
             return NoContent();
+        }
+
+        [HttpPost]
+        [Route("Delete")]
+        public async Task<ProcessResultT<MsProduct>> Delete([FromBody] MsProduct Model)
+        {
+            var processResult = new ProcessResultT<MsProduct>();
+
+            try
+            {
+                var productToDelete = await _myDbContext.MsProduct.FindAsync(Model.Id);
+                if (productToDelete == null)
+                {
+                    processResult.DeleteFailed();
+                    return processResult;
+                }
+
+                _myDbContext.MsProduct.Remove(productToDelete);
+                await _myDbContext.SaveChangesAsync();
+                processResult.DeleteSucceed();
+            }
+            catch (Exception e)
+            {
+                processResult.SetException(e);
+            }
+
+            return processResult;
         }
     }
 }
