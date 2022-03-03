@@ -89,5 +89,26 @@ namespace LatihanSoalAPI.Controllers
             await _myDbContext.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpPost]
+        [Route("Delete")]
+        public async Task<ProcessResultT<MsPelanggan>> Delete([FromBody] MsPelanggan Model)
+        {
+            var processResult = new ProcessResultT<MsPelanggan>();
+
+            try
+            {
+                var pelangganToDelete = await _myDbContext.MsPelanggan.FindAsync(Model.Id);
+                _myDbContext.MsPelanggan.Remove(pelangganToDelete);
+                await _myDbContext.SaveChangesAsync();
+                processResult.DeleteSucceed();
+            }
+            catch (Exception e)
+            {
+                processResult.SetException(e);
+            }
+
+            return processResult;
+        }
     }
 }
