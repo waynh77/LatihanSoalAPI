@@ -18,7 +18,16 @@ namespace LatihanSoalAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAsync()
         {
-            var pelanggan = await _myDbContext.MsPelanggan.ToListAsync();
+
+#pragma warning disable CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+            var pelanggan = await _myDbContext.MsPelanggan
+                .AsNoTracking()
+                .AsQueryable()
+                .Include(e=>e.Transaksi)
+#pragma warning restore CS8620 // Argument cannot be used for parameter due to differences in the nullability of reference types.
+                .ThenInclude(e=>e.TransaksiDetail)
+                .ThenInclude(e=>e.Produk)
+                .ToListAsync();
             return Ok(pelanggan);
         }
 

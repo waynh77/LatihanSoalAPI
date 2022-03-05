@@ -6,5 +6,6 @@
         public string? Nama { get; set; }
         public decimal Harga { get; set; }
         public string? Deskripsi { get; set; }
+        public List<TransaksiDetail> TransaksiDetail { get; set; }
     }
 }
